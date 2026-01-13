@@ -1,0 +1,447 @@
+import React, { useState, useEffect, useRef } from "react";
+import { LABEL_CONTENT, MILESTONES, ULTRASOUND_IMAGES } from "./constants";
+import { VintageLabel } from "./components/VintageLabel";
+import { ImageModal } from "./components/ImageModal";
+import {
+  ChevronDown,
+  Heart,
+  Camera,
+  ChevronRight,
+  ArrowLeft,
+  ArrowUp,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+
+type Page = "landing" | "ultrasounds" | "history";
+
+interface SelectedImage {
+  src: string;
+  caption: string;
+}
+
+const App: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState<Page>("landing");
+  const [previousPage, setPreviousPage] = useState<Page | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<SelectedImage | null>(
+    null
+  );
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  const historyScrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
+  const navigateTo = (page: Page) => {
+    setPreviousPage(currentPage);
+    setCurrentPage(page);
+    setShowScrollTop(false);
+  };
+
+  const handleHistoryScroll = (e: React.UIEvent<HTMLElement>) => {
+    const threshold = window.innerHeight * 1;
+    const currentScroll = e.currentTarget.scrollTop;
+    if (currentScroll > threshold && !showScrollTop) {
+      setShowScrollTop(true);
+    } else if (currentScroll <= threshold && showScrollTop) {
+      setShowScrollTop(false);
+    }
+  };
+
+  const scrollToTop = () => {
+    historyScrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const pageOrder: Page[] = ["landing", "ultrasounds", "history"];
+  const getDirection = () => {
+    if (!previousPage) return 0;
+    const prevIdx = pageOrder.indexOf(previousPage);
+    const currIdx = pageOrder.indexOf(currentPage);
+    return currIdx > prevIdx ? 1 : -1;
+  };
+
+  const direction = getDirection();
+
+  const variants = {
+    center: {
+      zIndex: 1,
+      x: 0,
+      y: 0,
+      opacity: 1,
+    },
+    exit: (direction: number) => ({
+      zIndex: 0,
+      x: direction < 0 ? "100%" : direction > 0 ? "-100%" : 0,
+      opacity: 0,
+    }),
+  };
+
+  const transition = {
+    x: { type: "spring" as const, stiffness: 300, damping: 35 },
+    opacity: { duration: 0.4 },
+    y: { duration: 0.6, ease: "easeOut" as const },
+  };
+
+  const renderLandingPage = () => (
+    <motion.section
+      key="landing"
+      custom={direction}
+      variants={variants}
+      animate="center"
+      exit="exit"
+      transition={transition}
+      className="relative h-screen overflow-hidden"
+    >
+      <div
+        className="
+    absolute inset-0
+    bg-[url('vino.png')]
+    bg-no-repeat
+    bg-right-bottom
+    opacity-20
+    bg-[length:70%_auto]
+    bg-[position:100%_80%]
+  "
+      />
+      <div className="relative z-10 flex flex-col justify-between p-6 pt-10 h-full">
+        <header className="w-full space-y-8 ">
+          <div className="space-y-1">
+            <motion.p
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1, duration: 1 }}
+              className="text-[10px] md:text-xs font-black text-gray-500 tracking-[0.3em] uppercase opacity-60"
+            >
+              MALBEC
+            </motion.p>
+
+            <motion.h1
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2, duration: 1 }}
+              className="text-5xl font-black leading-none text-gray-700 break-words max-w-sm"
+            >
+              {LABEL_CONTENT.title}
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3, duration: 1 }}
+              className="text-[10px] md:text-xs font-black text-gray-500 tracking-[0.3em] uppercase opacity-60"
+            >
+              COSECHA 2025
+            </motion.p>
+          </div>
+          <motion.div
+            initial={{ width: 0, opacity: 0 }}
+            animate={{ width: "12rem", opacity: 0.4 }}
+            transition={{ delay: 1, duration: 1 }}
+            className="h-0.5 bg-gray-800"
+          ></motion.div>
+
+          <motion.p
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.8, duration: 1 }}
+            className="text-base md:text-lg leading-relaxed font-serif w-4/6 italic text-gray-700"
+          >
+            {LABEL_CONTENT.description
+              .split("pequeños detalles")
+              .map((part, i, arr) => (
+                <React.Fragment key={i}>
+                  {part}
+                  {i < arr.length - 1 && (
+                    <span className="font-bold not-italic">
+                      pequeños detalles
+                    </span>
+                  )}
+                </React.Fragment>
+              ))}
+          </motion.p>
+        </header>
+
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 1.2, duration: 1 }}
+          className="flex flex-col mt-4 md:mt-8"
+        >
+          <button
+            onClick={() => navigateTo("ultrasounds")}
+            className="group relative flex items-center justify-center bg-gray-700 text-[#f6f5f2] px-10 py-3 rounded-md font-bold tracking-[0.2em] uppercase hover:bg-gray-600 transition-all duration-300 shadow-lg"
+          >
+            <span className="text-xs">ver mas</span>
+          </button>
+        </motion.div>
+      </div>
+    </motion.section>
+  );
+
+  const renderUltrasoundsPage = () => (
+    <motion.section
+      key="ultrasounds"
+      custom={direction}
+      variants={variants}
+      initial="enter"
+      animate="center"
+      exit="exit"
+      transition={transition}
+      className="h-screen flex flex-col items-center justify-between p-6 pt-10 overflow-hidden bg-[#f6f5f2] absolute inset-0 hide-scrollbar"
+    >
+      <div className="flex-1 flex flex-col items-center justify-center w-full max-w-md mx-auto space-y-6 md:space-y-10">
+        <div className="text-center space-y-1 max-w-xs">
+          <motion.p 
+          initial={{ opacity: 0, }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+          
+          className="text-md font-semibold italic text-gray-700 leading-tight">
+            "{LABEL_CONTENT.footerQuote}"
+          </motion.p>
+
+          <div className="flex items-center justify-center space-x-3 opacity-40">
+            
+          
+             <motion.div 
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
+              style={{ originX: 1 }}
+              className="h-0.5 w-16 bg-gray-800"
+              
+            />
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8 }}
+            >
+              
+              
+              <svg
+                width="2em"
+                height="2em"
+                viewBox="0 0 800 1000"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g transform="translate(576, 369) translate(-256, -256) rotate(65, 256, 256)">
+                  <g transform="scale(-1, 1) translate(-512, 0)">
+                    <path
+                      d="M246.625 18.375c-11.817-.153-23.918 8.608-29.375 22.438c-6.716 17.02-.85 35.28 13.094 40.78c13.943 5.502 30.69-3.822 37.406-20.843c6.716-17.02.85-35.28-13.094-40.78a22.5 22.5 0 0 0-8.03-1.595zm74.75 15.938c-10.97.006-22.743 6.024-30.78 16.874c-12.25 16.534-11.2 38.06 2.342 48.094c13.544 10.035 34.44 4.754 46.688-11.78c12.25-16.534 11.2-38.06-2.344-48.094c-4.654-3.45-10.16-5.097-15.905-5.093zm67.25 37.53c-10.336-.127-21.542 4.263-30.47 12.907c-15.87 15.368-18.525 38.344-5.936 51.344c12.587 13 35.66 11.086 51.53-4.28c15.87-15.37 18.526-38.345 5.938-51.345c-5.508-5.69-13.024-8.527-21.063-8.626zm-156.438 32.063c-22.51-.28-44.378 6.893-63.5 24C107.65 182.513 48.192 261.012 28.28 386.97C5.023 534.1 186.257 507.523 168.313 428.936c-22.922-100.387 34.13-141.11 108-124.156c32.838 7.54 66.54-4.9 86-40.436c23.402-42.733-7.428-106.817-62.875-139.625c-21.61-12.79-44.74-20.534-67.25-20.814zM449.438 134c-10.52.022-21.654 2.82-32.093 8.625c-27.837 15.48-40.15 46.51-27.47 69.313c12.682 22.802 45.54 28.73 73.376 13.25s40.118-46.51 27.438-69.313c-7.926-14.252-23.717-21.91-41.25-21.875z"
+                      fill-opacity="1"
+                    />
+                  </g>
+                </g>
+
+                <g transform="translate(197, 542) translate(-256, -256) rotate(-14, 256, 256)">
+                  <g transform="">
+                    <path
+                      d="M246.625 18.375c-11.817-.153-23.918 8.608-29.375 22.438c-6.716 17.02-.85 35.28 13.094 40.78c13.943 5.502 30.69-3.822 37.406-20.843c6.716-17.02.85-35.28-13.094-40.78a22.5 22.5 0 0 0-8.03-1.595zm74.75 15.938c-10.97.006-22.743 6.024-30.78 16.874c-12.25 16.534-11.2 38.06 2.342 48.094c13.544 10.035 34.44 4.754 46.688-11.78c12.25-16.534 11.2-38.06-2.344-48.094c-4.654-3.45-10.16-5.097-15.905-5.093zm67.25 37.53c-10.336-.127-21.542 4.263-30.47 12.907c-15.87 15.368-18.525 38.344-5.936 51.344c12.587 13 35.66 11.086 51.53-4.28c15.87-15.37 18.526-38.345 5.938-51.345c-5.508-5.69-13.024-8.527-21.063-8.626zm-156.438 32.063c-22.51-.28-44.378 6.893-63.5 24C107.65 182.513 48.192 261.012 28.28 386.97C5.023 534.1 186.257 507.523 168.313 428.936c-22.922-100.387 34.13-141.11 108-124.156c32.838 7.54 66.54-4.9 86-40.436c23.402-42.733-7.428-106.817-62.875-139.625c-21.61-12.79-44.74-20.534-67.25-20.814zM449.438 134c-10.52.022-21.654 2.82-32.093 8.625c-27.837 15.48-40.15 46.51-27.47 69.313c12.682 22.802 45.54 28.73 73.376 13.25s40.118-46.51 27.438-69.313c-7.926-14.252-23.717-21.91-41.25-21.875z"
+                      fill-opacity="1"
+                    />
+                  </g>
+                </g>
+              </svg>
+            </motion.div>
+            
+              <motion.div 
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
+              style={{ originX: 0 }}
+              className="h-0.5 w-16 bg-gray-800"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-x-2 gap-y-4 md:gap-x-4 md:gap-y-6 w-full">
+          {ULTRASOUND_IMAGES.map((item, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, scale: 0.9, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ delay: 0.2 + idx * 0.1 }}
+              className="space-y-2 group"
+            >
+              <div
+                className=" p-1 bg-white shadow-xl transform group-hover:scale-105 transition-transform duration-300 cursor-zoom-in"
+                onClick={() =>
+                  setSelectedImage({
+                    src: item.src,
+                    caption: `${item.date} — ${item.weeks}`,
+                  })
+                }
+              >
+                <img
+                  src={item.src}
+                  alt={`Ecografía ${idx + 1}`}
+                  className="w-full aspect-square object-cover opacity-90 group-hover:opacity-100 transition-opacity"
+                />
+              </div>
+              <div className="text-center">
+                <p className="text-[9px] font-bold uppercase  text-gray-700 leading-none">
+                  {item.date}
+                </p>
+                <p className="text-[10px] text-gray-700 ">{item.weeks}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+
+      <motion.button
+      initial={{ opacity: 0, }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.4, duration: 0.8 }}
+        onClick={() => navigateTo("history")}
+        className="group relative flex items-center w-full max-w-md justify-center bg-gray-700 text-[#f6f5f2] px-10 py-3 rounded-md font-bold tracking-[0.2em] uppercase hover:bg-gray-600 transition-all duration-300 shadow-lg"
+        >
+        <span className="text-xs">continua</span>
+      </motion.button>
+        
+    </motion.section>
+  );
+
+  const renderHistoryPage = () => (
+    <motion.section
+      key="history"
+      ref={historyScrollRef}
+      onScroll={handleHistoryScroll}
+      custom={direction}
+      variants={variants}
+      initial="enter"
+      animate="center"
+      exit="exit"
+      transition={transition}
+      className="min-h-screen p-6 pt-10 space-y-8 bg-[#f6f5f2] absolute inset-0 overflow-y-auto hide-scrollbar"
+    >
+      <div className="text-center ">
+        <h4 className="text-xs font-bold opacity-50">Linea de tiempo</h4>
+        <h2 className="text-2xl  font-black text-gray-800 ">
+          Pierina Cavitelli
+        </h2>
+      </div>
+
+      <div className="relative space-y-12 sm:space-y-16 max-w-2xl mx-auto pb-24">
+        {/* Central vertical line - visible on all screens */}
+        <div className="absolute left-1/2 top-0 bottom-24 w-px bg-slate-800 opacity-10"></div>
+
+        {MILESTONES.map((milestone, index) => {
+          const isEven = index % 2 === 0;
+          const staggerBase = (index % 4) * 0.1;
+
+          return (
+            <div
+              key={index}
+              className={`relative flex flex-row items-center gap-2 ${
+                !isEven ? "flex-row-reverse" : ""
+              }`}
+            >
+              {/* Image Column - slides in from its respective side with stagger */}
+              <motion.div
+                initial={{ opacity: 0, x: isEven ? -40 : 40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.4 }}
+                transition={{
+                  duration: 0.8,
+                  ease: "easeOut",
+                  delay: staggerBase,
+                }}
+                className="w-1/2 flex justify-center px-2"
+              >
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="bg-white p-1 sm:p-1.5 shadow-lg cursor-zoom-in w-full max-w-[140px] sm:max-w-none"
+                  onClick={() =>
+                    setSelectedImage({
+                      src: milestone.image,
+                      caption: `${milestone.title}: ${milestone.description}`,
+                    })
+                  }
+                >
+                  <img
+                    src={milestone.image}
+                    alt={milestone.title}
+                    className="w-full aspect-square object-cover"
+                  />
+                </motion.div>
+              </motion.div>
+
+              {/* Text Column - slides in from the opposite side with an additional delay after image */}
+              <motion.div
+                initial={{ opacity: 0, x: isEven ? 40 : -40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.4 }}
+                transition={{
+                  duration: 0.8,
+                  ease: "easeOut",
+                  delay: staggerBase + 0.2,
+                }}
+                className={`w-1/2 ${
+                  isEven ? "text-left pl-3 sm:pl-0" : "text-right pr-3 sm:pr-0"
+                } space-y-0.5 sm:space-y-2`}
+              >
+                <span className="text-[8px] sm:text-[10px] font-black tracking-[0.1em] sm:tracking-[0.2em] text-slate-400 uppercase">
+                  {milestone.date}
+                </span>
+                <h5 className="text-[12px] sm:text-xl font-black text-slate-800 leading-tight">
+                  {milestone.title}
+                </h5>
+                <p className="text-[9px] sm:text-sm font-serif italic text-slate-600 leading-tight sm:leading-relaxed">
+                  {milestone.description}
+                </p>
+              </motion.div>
+            </div>
+          );
+        })}
+
+      
+      </div>
+
+      {/* Floating Scroll Top Button */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.5, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.5, y: 20 }}
+            onClick={scrollToTop}
+            className="fixed bottom-8 right-8 z-40 bg-slate-800 text-white p-4 rounded-full shadow-2xl hover:bg-slate-700 transition-colors"
+            aria-label="Subir arriba"
+          >
+            <ArrowUp className="w-4 h-4" />
+          </motion.button>
+        )}
+      </AnimatePresence>
+    </motion.section>
+  );
+
+  return (
+    <div
+      className="min-h-screen max-w-xl mx-auto bg-[#f6f5f2] relative hide-scrollbar"
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transition: "opacity 1s ease-in-out",
+      }}
+    >
+      <div className="relative h-screen overflow-hidden">
+        <AnimatePresence initial={true} custom={direction} mode="wait">
+          {currentPage === "landing" && renderLandingPage()}
+          {currentPage === "ultrasounds" && renderUltrasoundsPage()}
+          {currentPage === "history" && renderHistoryPage()}
+        </AnimatePresence>
+      </div>
+
+      <ImageModal
+        src={selectedImage?.src || null}
+        caption={selectedImage?.caption}
+        onClose={() => setSelectedImage(null)}
+      />
+    </div>
+  );
+};
+
+export default App;
