@@ -107,7 +107,7 @@ const App: React.FC = () => {
       animate="center"
       exit="exit"
       transition={transition}
-      className="relative h-[var(--app-height)] overflow-hidden"
+      className="relative h-full overflow-hidden"
     >
       <div
         className="
@@ -204,7 +204,7 @@ const App: React.FC = () => {
       animate="center"
       exit="exit"
       transition={transition}
-      className="h-[var(--app-height)] flex flex-col items-center justify-between p-6 pt-10 overflow-hidden bg-[#f6f5f2] absolute inset-0 hide-scrollbar"
+      className="h-full flex flex-col items-center justify-between p-6 pt-10 overflow-hidden bg-[#f6f5f2] absolute inset-0 hide-scrollbar"
     >
       <div className="flex-1 flex flex-col items-center justify-center w-full max-w-md mx-auto space-y-6 md:space-y-10">
         <div className="text-center space-y-1 max-w-xs">
@@ -331,7 +331,7 @@ const App: React.FC = () => {
       animate="center"
       exit="exit"
       transition={transition}
-      className="h-[var(--app-height)] p-6 pt-10 space-y-8 bg-[#f6f5f2] absolute inset-0 overflow-y-auto hide-scrollbar"
+      className="h-full p-6 pt-10 space-y-8 bg-[#f6f5f2] absolute inset-0 overflow-y-auto hide-scrollbar"
     >
       <div className="text-center ">
         <h4 className="text-xs font-bold opacity-50">Linea de tiempo</h4>
@@ -442,7 +442,7 @@ const App: React.FC = () => {
         transition: "opacity 1s ease-in-out",
       }}
     >
-      <div className="relative h-[var(--app-height)] overflow-hidden">
+      <div className="relative h-full overflow-hidden">
         <AnimatePresence initial={true} custom={direction} mode="wait">
           {currentPage === "landing" && renderLandingPage()}
           {currentPage === "ultrasounds" && renderUltrasoundsPage()}
