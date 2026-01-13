@@ -105,7 +105,7 @@ const App: React.FC = () => {
     bg-[position:100%_80%]
   "
       />
-      <div className="relative z-10 flex flex-col justify-between p-6 pt-10 h-full">
+      <div className="relative z-10 flex flex-col justify-between p-6 pt-10 min-h-[100dvh]">
         <header className="w-full space-y-8 ">
           <div className="space-y-1">
             <motion.p
