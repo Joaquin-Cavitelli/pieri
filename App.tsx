@@ -92,7 +92,7 @@ const App: React.FC = () => {
       animate="center"
       exit="exit"
       transition={transition}
-      className="relative h-screen overflow-hidden"
+      className="relative min-h-[100dvh] overflow-hidden "
     >
       <div
         className="
@@ -105,7 +105,7 @@ const App: React.FC = () => {
     bg-[position:100%_80%]
   "
       />
-      <div className="relative z-10 flex flex-col justify-between p-6 pt-10 min-h-[100dvh]">
+      <div className="relative z-10 flex flex-col justify-between p-6 pt-10 h-full">
         <header className="w-full space-y-8 ">
           <div className="space-y-1">
             <motion.p
@@ -189,7 +189,7 @@ const App: React.FC = () => {
       animate="center"
       exit="exit"
       transition={transition}
-      className="h-screen flex flex-col items-center justify-between p-6 pt-10 overflow-hidden bg-[#f6f5f2] absolute inset-0 hide-scrollbar"
+      className="min-h-[100dvh] flex flex-col items-center justify-between p-6 pt-10 overflow-hidden bg-[#f6f5f2] absolute inset-0 hide-scrollbar"
     >
       <div className="flex-1 flex flex-col items-center justify-center w-full max-w-md mx-auto space-y-6 md:space-y-10">
         <div className="text-center space-y-1 max-w-xs">
@@ -316,7 +316,7 @@ const App: React.FC = () => {
       animate="center"
       exit="exit"
       transition={transition}
-      className="min-h-screen p-6 pt-10 space-y-8 bg-[#f6f5f2] absolute inset-0 overflow-y-auto hide-scrollbar"
+      className="min-h-[100dvh] p-6 pt-10 space-y-8 bg-[#f6f5f2] absolute inset-0 overflow-y-auto hide-scrollbar"
     >
       <div className="text-center ">
         <h4 className="text-xs font-bold opacity-50">Linea de tiempo</h4>
@@ -421,13 +421,13 @@ const App: React.FC = () => {
 
   return (
     <div
-      className="min-h-screen max-w-xl mx-auto bg-[#f6f5f2] relative hide-scrollbar"
+      className="min-h-[100dvh] max-w-xl mx-auto bg-[#f6f5f2] relative hide-scrollbar"
       style={{
         opacity: isVisible ? 1 : 0,
         transition: "opacity 1s ease-in-out",
       }}
     >
-      <div className="relative h-screen overflow-hidden">
+      <div className="relative min-h-[100dvh] overflow-hidden">
         <AnimatePresence initial={true} custom={direction} mode="wait">
           {currentPage === "landing" && renderLandingPage()}
           {currentPage === "ultrasounds" && renderUltrasoundsPage()}
