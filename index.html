@@ -10,6 +10,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Montserrat:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
+        html,
+body,
+#root {
+    height: 100%;
+}
         body {
             font-family: 'Montserrat', sans-serif;
             background-color: #f6f5f2; /* New off-white with grey notes */
@@ -27,10 +32,7 @@
         ::-webkit-scrollbar {
             display: none;
         }
-        /* Fix for absolute positioned transition containers */
-        #root {
-            min-height: 100vh;
-        }
+        
         /* Ensure specific scrollable elements also hide scrollbars */
         .hide-scrollbar {
             -ms-overflow-style: none;

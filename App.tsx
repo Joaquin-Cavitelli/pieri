@@ -31,21 +31,6 @@ const App: React.FC = () => {
   const historyScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-  const setAppHeight = () => {
-    document.documentElement.style.setProperty(
-      "--app-height",
-      `${window.innerHeight}px`
-    );
-  };
-
-  setAppHeight();
-  window.addEventListener("resize", setAppHeight);
-
-  return () => window.removeEventListener("resize", setAppHeight);
-}, []);
-
-
-  useEffect(() => {
     setIsVisible(true);
   }, []);
 
@@ -331,7 +316,7 @@ const App: React.FC = () => {
       animate="center"
       exit="exit"
       transition={transition}
-      className="h-full p-6 pt-10 space-y-8 bg-[#f6f5f2] absolute inset-0 overflow-y-auto hide-scrollbar"
+      className="min-h-full p-6 pt-10 space-y-8 bg-[#f6f5f2] absolute inset-0 overflow-y-auto hide-scrollbar"
     >
       <div className="text-center ">
         <h4 className="text-xs font-bold opacity-50">Linea de tiempo</h4>
@@ -436,7 +421,7 @@ const App: React.FC = () => {
 
   return (
     <div
-      className="h-[var(--app-height)] max-w-xl mx-auto bg-[#f6f5f2] relative hide-scrollbar"
+      className="min-h-full max-w-xl mx-auto bg-[#f6f5f2] relative hide-scrollbar"
       style={{
         opacity: isVisible ? 1 : 0,
         transition: "opacity 1s ease-in-out",
