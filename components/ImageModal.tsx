@@ -75,7 +75,7 @@ export const ImageModal: React.FC<ImageModalProps> = ({ src, caption, onClose })
       </div>
 
       <div 
-        className="flex flex-col items-center w-full min-h-[100dvh] space-y-4"
+        className="flex flex-col items-center w-full h-full space-y-4"
         onClick={(e) => e.stopPropagation()}
       >
         <img 
