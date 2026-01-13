@@ -92,7 +92,7 @@ const App: React.FC = () => {
       animate="center"
       exit="exit"
       transition={transition}
-      className="relative min-h-[100dvh] overflow-hidden"
+      className="relative h-screen overflow-hidden"
     >
       <div
         className="
