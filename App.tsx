@@ -421,13 +421,13 @@ const App: React.FC = () => {
 
   return (
     <div
-      className="min-h-full max-w-xl mx-auto bg-[#f6f5f2] relative hide-scrollbar"
+      className="min-h-dvh max-w-xl mx-auto bg-[#f6f5f2] relative hide-scrollbar"
       style={{
         opacity: isVisible ? 1 : 0,
         transition: "opacity 1s ease-in-out",
       }}
     >
-      <div className="relative h-full overflow-hidden">
+      <div className="relative h-dvh overflow-hidden">
         <AnimatePresence initial={true} custom={direction} mode="wait">
           {currentPage === "landing" && renderLandingPage()}
           {currentPage === "ultrasounds" && renderUltrasoundsPage()}
