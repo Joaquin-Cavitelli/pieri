@@ -325,7 +325,7 @@ const App: React.FC = () => {
         </h2>
       </div>
 
-      <div className="relative space-y-12 sm:space-y-16 max-w-2xl mx-auto pb-24">
+      <div className="relative space-y-4 max-w-2xl mx-auto pb-24">
         {/* Central vertical line - visible on all screens */}
         <div className="absolute left-1/2 top-0 bottom-24 w-px bg-slate-800 opacity-10"></div>
 
@@ -350,11 +350,11 @@ const App: React.FC = () => {
                   ease: "easeOut",
                   delay: staggerBase,
                 }}
-                className="w-1/2 flex justify-center px-2"
+                className="w-1/2 flex justify-center "
               >
                 <motion.div
                   whileHover={{ scale: 1.05 }}
-                  className="bg-white p-1 sm:p-1.5 shadow-lg cursor-zoom-in w-full max-w-[140px] sm:max-w-none"
+                  className="bg-white p-1 sm:p-1.5 shadow-lg cursor-zoom-in w-full  sm:max-w-none"
                   onClick={() =>
                     setSelectedImage({
                       src: milestone.image,
