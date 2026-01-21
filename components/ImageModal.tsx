@@ -128,17 +128,17 @@ export const ImageModal: React.FC<ImageModalProps> = ({ src, caption, onClose })
       
       {/* Main Content Area */}
       <div 
-        className={`flex-1 relative overflow-auto ${isZoomed ? 'cursor-zoom-out' : 'cursor-default flex items-center justify-center'}`}
+        className={`flex-1 relative overflow-auto ${isZoomed ? '' : 'flex items-center justify-center'}`}
         onClick={onClose}
       >
         <div 
           className={`relative transition-all duration-300 ease-in-out ${isZoomed ? 'w-[200%] h-auto' : 'w-full h-full max-w-full max-h-full flex items-center justify-center p-4 md:p-12'} animate-in zoom-in-95`}
-          onClick={toggleZoom}
+          onClick={(e) => e.stopPropagation()}
         >
           <img 
             src={src} 
             alt="Vista detallada" 
-            className={`object-contain shadow-2xl transition-all duration-300 rounded-md ${isZoomed ? 'w-full h-auto cursor-zoom-out' : 'max-w-full max-h-[85vh] md:max-h-[90vh] cursor-zoom-in'}`}
+            className={`object-contain shadow-2xl transition-all duration-300 ${isZoomed ? 'w-full h-auto' : 'max-w-full max-h-[85vh] md:max-h-[90vh]'}`}
           />
         </div>
       </div>
